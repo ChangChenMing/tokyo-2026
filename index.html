@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jimmy's Tokyo Trip 2026</title>
+    <style>
+        /* CSS：這裡決定網站美不美觀 (像 App 的 UI 設計) */
+        :root { --primary: #3498db; --bg: #f5f7fa; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 15px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        
+        h1 { text-align: center; color: #2c3e50; font-size: 1.5rem; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #95a5a6; font-size: 0.9rem; margin-bottom: 20px; }
+
+        /* 導覽按鈕區 */
+        .nav-scroll { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        .nav-btn { flex: 0 0 auto; padding: 10px 20px; border: none; border-radius: 50px; background: #eee; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+
+        /* 內容區塊控制 */
+        .content-section { display: none; animation: fadeIn 0.4s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 行程細節卡片設計 */
+        .card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .time-tag { background: #e1f5fe; color: #0288d1; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
+        .price-info { background: #fff3e0; color: #e65100; padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; border: 1px dashed #ffb74d; }
+        
+        /* 總表表格樣式 */
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: var(--primary); color: white; padding: 10px; text-align: left; }
+        td { border-bottom: 1px solid #eee; padding: 10px; }
+
+        /* 地圖區域 */
+        .map-box { height: 250px; background: #ddd; border-radius: 15px; margin-bottom: 20px; overflow: hidden; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🗼 東京六天五夜行程</h1>
+    <p class="subtitle">2026/07/18 - 07/23 | 國考後的冒險 📸</p>
+
+    <div class="nav-scroll">
+        <button class="nav-btn active" onclick="switchPage('overview')">總體行程</button>
+        <button class="nav-btn" onclick="switchPage('d1')">D1 7/18</button>
+        <button class="nav-btn" onclick="switchPage('d2')">D2 7/19</button>
+        <button class="nav-btn" onclick="switchPage('d3')">D3 7/20</button>
+        <button class="nav-btn" onclick="switchPage('d4')">D4 7/21</button>
+        <button class="nav-btn" onclick="switchPage('d5')">D5 7/22</button>
+        <button class="nav-btn" onclick="switchPage('d6')">D6 7/23</button>
+    </div>
+
+    <div class="map-box">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d103708.3188568165!2d139.6384288!3d35.6803997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188b8576281c2d%3A0x44fd3d00122e23c7!2z5p2x5Lqs6YO9!5e0!3m2!1szh-TW!2sjp!4v1710000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <div id="overview" class="content-section active">
+        <h3>📊 總行程概覽</h3>
+        <table>
+            <tr><th>日期</th><th>主打景點</th><th>宿</th></tr>
+            <tr><td>D1 (六)</td><td>新宿/棒球打擊場</td><td>新宿</td></tr>
+            <tr><td>D2 (日)</td><td>原宿/Shibuya Sky</td><td>新宿</td></tr>
+            <tr><td>D3 (一)</td><td>高尾山/溫泉</td><td>新宿</td></tr>
+            <tr><td>D4 (二)</td><td>淺草/清澄白河/晴空塔</td><td>新宿</td></tr>
+            <tr><td>D5 (三)</td><td>築地/東京鐵塔/上野</td><td>新宿</td></tr>
+            <tr><td>D6 (四)</td><td>阿美橫町採買/回程</td><td>-</td></tr>
+        </table>
+    </div>
+
+    <div id="d1" class="content-section">
+        <h3>📅 Day 1: 7/18 新宿</h3>
+        <div class="card">
+            <span class="time-tag">07:00</span> 抵達東京
+            <p>寄放行李後前往早午餐。</p>
+        </div>
+        <div class="card">
+            <span class="time-tag">14:00</span> 奧斯陸棒球打擊場
+            <div class="price-info">💰 費用：約 400-500 JPY/次<br>📍 備註：適合宣洩國考壓力！</div>
+        </div>
+        <div class="card">
+            <span class="time-tag">19:00</span> 思出橫丁 & 歌舞伎町
+            <p>使用 X-T2 拍攝新宿夜晚街頭光影。</p>
+        </div>
+    </div>
+
+    <div id="d2" class="content-section">
+        <h3>📅 Day 2: 7/19 澀谷</h3>
+        <div class="card">
+            <span class="time-tag">17:30</span> Shibuya Sky
+            <div class="price-info">🎟️ 門票：2,200 JPY (需提前預約)<br>📅 提醒：6 月中旬官網開放搶票。</div>
+        </div>
+    </div>
+
+    <div id="d3" class="content-section"><h3>Day 3 內容載入中...</h3></div>
+    <div id="d4" class="content-section"><h3>Day 4 內容載入中...</h3></div>
+    <div id="d5" class="content-section"><h3>Day 5 內容載入中...</h3></div>
+    <div id="d6" class="content-section"><h3>Day 6 內容載入中...</h3></div>
+
+</div>
+
+<script>
+    /* JavaScript：這就是讓按鈕「動起來」的魔法 */
+    function switchPage(pageId) {
+        // 1. 隱藏所有行程區塊
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        // 2. 移除所有按鈕的「選中狀態 (active)」
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 3. 顯示被點擊的那個區塊
+        document.getElementById(pageId).classList.add('active');
+
+        // 4. 讓被點擊的按鈕變色
+        event.currentTarget.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
