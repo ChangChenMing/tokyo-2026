@@ -3,122 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jimmy's Tokyo Trip 2026</title>
+    <title>東京六天五夜群組自由行</title>
     <style>
-        /* CSS：這裡決定網站美不美觀 (像 App 的 UI 設計) */
-        :root { --primary: #3498db; --bg: #f5f7fa; }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 15px; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        
-        h1 { text-align: center; color: #2c3e50; font-size: 1.5rem; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #95a5a6; font-size: 0.9rem; margin-bottom: 20px; }
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-light: #7f8c8d;
+            --highlight: #e74c3c;
+        }
 
-        /* 導覽按鈕區 */
-        .nav-scroll { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
-        .nav-btn { flex: 0 0 auto; padding: 10px 20px; border: none; border-radius: 50px; background: #eee; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+        body {
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
 
-        /* 內容區塊控制 */
-        .content-section { display: none; animation: fadeIn 0.4s ease; }
-        .content-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+            padding-bottom: 50px;
+        }
 
-        /* 行程細節卡片設計 */
-        .card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .time-tag { background: #e1f5fe; color: #0288d1; padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
-        .price-info { background: #fff3e0; color: #e65100; padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; border: 1px dashed #ffb74d; }
-        
-        /* 總表表格樣式 */
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { background: var(--primary); color: white; padding: 10px; text-align: left; }
-        td { border-bottom: 1px solid #eee; padding: 10px; }
+        header {
+            text-align: center;
+            padding: 20px 0 10px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-        /* 地圖區域 */
-        .map-box { height: 250px; background: #ddd; border-radius: 15px; margin-bottom: 20px; overflow: hidden; }
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); }
+        .subtitle { font-size: 0.9rem; color: var(--text-light); margin-top: 5px; }
+
+        /* 滑動導覽列 */
+        .nav-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-scroll::-webkit-scrollbar { display: none; }
+
+        .nav-btn {
+            flex: 0 0 auto;
+            padding: 8px 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-light);
+            transition: 0.3s;
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        /* 地圖切換區 */
+        .map-box {
+            width: 100%;
+            height: 250px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: #e9ecef;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .map-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        .map-frame.active { display: block; }
+
+        /* 內容區塊 */
+        .page-content { display: none; animation: fadeIn 0.4s ease; }
+        .page-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 行程卡片 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .spot-title { font-size: 1.15rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; }
+        .desc { font-size: 0.95rem; color: #555; margin-bottom: 15px; }
+
+        .info-row {
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent);
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        /* 導航按鈕 */
+        .nav-link {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            background: #f1f2f6;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover { background: #dfe4ea; }
+
+        /* 總表 */
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; font-size: 0.9rem; }
+        th { background: var(--primary); color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🗼 東京六天五夜行程</h1>
-    <p class="subtitle">2026/07/18 - 07/23 | 國考後的冒險 📸</p>
-
+<header>
+    <h1>✈️ 東京六天五夜自由行</h1>
+    <div class="subtitle">2026/07/18 — 07/23 | 群組旅行指南</div>
+    
     <div class="nav-scroll">
-        <button class="nav-btn active" onclick="switchPage('overview')">總體行程</button>
-        <button class="nav-btn" onclick="switchPage('d1')">D1 7/18</button>
-        <button class="nav-btn" onclick="switchPage('d2')">D2 7/19</button>
-        <button class="nav-btn" onclick="switchPage('d3')">D3 7/20</button>
-        <button class="nav-btn" onclick="switchPage('d4')">D4 7/21</button>
-        <button class="nav-btn" onclick="switchPage('d5')">D5 7/22</button>
-        <button class="nav-btn" onclick="switchPage('d6')">D6 7/23</button>
+        <button class="nav-btn active" onclick="switchTab('overview')">總表</button>
+        <button class="nav-btn" onclick="switchTab('d1')">7/18 (六)</button>
+        <button class="nav-btn" onclick="switchTab('d2')">7/19 (日)</button>
+        <button class="nav-btn" onclick="switchTab('d3')">7/20 (一)</button>
+        <button class="nav-btn" onclick="switchTab('d4')">7/21 (二)</button>
+        <button class="nav-btn" onclick="switchTab('d5')">7/22 (三)</button>
+        <button class="nav-btn" onclick="switchTab('d6')">7/23 (四)</button>
     </div>
+</header>
+
+<div class="container">
 
     <div class="map-box">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d103708.3188568165!2d139.6384288!3d35.6803997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188b8576281c2d%3A0x44fd3d00122e23c7!2z5p2x5Lqs6YO9!5e0!3m2!1szh-TW!2sjp!4v1710000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-    </div>
-
-    <div id="overview" class="content-section active">
-        <h3>📊 總行程概覽</h3>
-        <table>
-            <tr><th>日期</th><th>主打景點</th><th>宿</th></tr>
-            <tr><td>D1 (六)</td><td>新宿/棒球打擊場</td><td>新宿</td></tr>
-            <tr><td>D2 (日)</td><td>原宿/Shibuya Sky</td><td>新宿</td></tr>
-            <tr><td>D3 (一)</td><td>高尾山/溫泉</td><td>新宿</td></tr>
-            <tr><td>D4 (二)</td><td>淺草/清澄白河/晴空塔</td><td>新宿</td></tr>
-            <tr><td>D5 (三)</td><td>築地/東京鐵塔/上野</td><td>新宿</td></tr>
-            <tr><td>D6 (四)</td><td>阿美橫町採買/回程</td><td>-</td></tr>
-        </table>
-    </div>
-
-    <div id="d1" class="content-section">
-        <h3>📅 Day 1: 7/18 新宿</h3>
-        <div class="card">
-            <span class="time-tag">07:00</span> 抵達東京
-            <p>寄放行李後前往早午餐。</p>
+        <iframe id="map-overview" class="map-frame active" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.7479754683745!2d139.6993259!3d35.6894875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188cd0d6b1ba1f%3A0x1c32a1f1ecacfdd5!2sShinjuku%20Station!5e0!3m2!1sen!2stw!4v1700000000000!5m2!1sen!2stw" loading="lazy"></iframe>
+        <iframe id="map-d1" class="map-frame" src="about:blank"></iframe>
+        <iframe id="map-d2" class="map-frame" src="about:blank"></iframe>
+        <iframe id="map-d3" class="map-frame" src="about:blank"></iframe>
+        <iframe id="map-d4" class="map-frame" src="about:blank"></iframe>
+        <iframe id="map-d5" class="map-frame" src="about:blank"></iframe>
+        <iframe id="map-d6" class="map-frame" src="about:blank"></iframe>
         </div>
+
+    <div id="overview" class="page-content active">
         <div class="card">
-            <span class="time-tag">14:00</span> 奧斯陸棒球打擊場
-            <div class="price-info">💰 費用：約 400-500 JPY/次<br>📍 備註：適合宣洩國考壓力！</div>
-        </div>
-        <div class="card">
-            <span class="time-tag">19:00</span> 思出橫丁 & 歌舞伎町
-            <p>使用 X-T2 拍攝新宿夜晚街頭光影。</p>
+            <span class="spot-title">📊 行程總覽</span>
+            <table>
+                <tr><th>日期</th><th>主要行程</th><th>住宿</th></tr>
+                <tr><td>D1 (六)</td><td>抵達 / 新宿市區探索</td><td>待定 🔍</td></tr>
+                <tr><td>D2 (日)</td><td>原宿 / 澀谷 / Shibuya Sky</td><td>待定 🔍</td></tr>
+                <tr><td>D3 (一)</td><td>高尾山健行 / 溫泉</td><td>待定 🔍</td></tr>
+                <tr><td>D4 (二)</td><td>淺草 / 清澄白河 / 晴空塔</td><td>待定 🔍</td></tr>
+                <tr><td>D5 (三)</td><td>築地 / 東京鐵塔 / 秋葉原</td><td>待定 🔍</td></tr>
+                <tr><td>D6 (四)</td><td>阿美橫町採買 / 賦歸</td><td>-</td></tr>
+            </table>
         </div>
     </div>
 
-    <div id="d2" class="content-section">
-        <h3>📅 Day 2: 7/19 澀谷</h3>
+    <div id="d1" class="page-content">
         <div class="card">
-            <span class="time-tag">17:30</span> Shibuya Sky
-            <div class="price-info">🎟️ 門票：2,200 JPY (需提前預約)<br>📅 提醒：6 月中旬官網開放搶票。</div>
+            <span class="time-badge">07:00</span>
+            <span class="spot-title">抵達東京 & 早午餐</span>
+            <div class="desc">機場入境，前往市區寄放行李，接著在附近享用早午餐。</div>
+            <div class="info-row">🏨 住宿狀態：待定 🔍</div>
+        </div>
+        <div class="card">
+            <span class="time-badge">下午</span>
+            <span class="spot-title">新宿：打擊場與電玩</span>
+            <div class="desc">前往奧斯陸棒球打擊場熱血揮棒，隨後逛 GiGO 或 Taito Station 大型電玩中心。</div>
+            <div class="info-row">💰 預算：打擊場約 400-500 JPY / 次</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=奧斯陸棒球打擊場+新宿" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">晚上</span>
+            <span class="spot-title">新宿：懷舊與夜生活</span>
+            <div class="desc">穿梭思出橫丁體驗在地居酒屋氛圍，感受歌舞伎町的繁華夜色。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=新宿思出橫丁" target="_blank" class="nav-link">📍 開啟地圖導航</a>
         </div>
     </div>
 
-    <div id="d3" class="content-section"><h3>Day 3 內容載入中...</h3></div>
-    <div id="d4" class="content-section"><h3>Day 4 內容載入中...</h3></div>
-    <div id="d5" class="content-section"><h3>Day 5 內容載入中...</h3></div>
-    <div id="d6" class="content-section"><h3>Day 6 內容載入中...</h3></div>
+    <div id="d2" class="page-content">
+        <div class="card">
+            <span class="time-badge">上午</span>
+            <span class="spot-title">明治神宮 & 原宿</span>
+            <div class="desc">早晨在明治神宮的森林步道散步，隨後前往竹下通感受年輕流行文化。</div>
+            <div class="info-row">🏨 住宿狀態：待定 🔍</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=明治神宮" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">下午</span>
+            <span class="spot-title">表參道 & 澀谷商圈</span>
+            <div class="desc">沿著表參道逛街，接著前往澀谷中心街，必逛任天堂與寶可夢旗艦店。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=Nintendo+TOKYO" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">傍晚 - 晚上</span>
+            <span class="spot-title">Shibuya Sky & 燒肉大餐</span>
+            <div class="desc">傍晚登上 Shibuya Sky 俯瞰城市日落與澀谷十字路口，晚上享用精選燒肉大餐。</div>
+            <div class="info-row">🎟️ 門票：2,200 JPY (需提前官網預約時段)</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=SHIBUYA+SKY" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+    </div>
+
+    <div id="d3" class="page-content">
+        <div class="card">
+            <span class="time-badge">全天</span>
+            <span class="spot-title">高尾山自然健行</span>
+            <div class="desc">搭乘登山纜車或吊椅上山，參拜藥王院並前往山頂展望台。午餐必吃山藥泥蕎麥麵與天狗燒。</div>
+            <div class="info-row">🎫 交通：纜車來回 950 JPY</div>
+            <div class="info-row">🏨 住宿狀態：待定 🔍</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=高尾山口站" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">傍晚 - 晚上</span>
+            <span class="spot-title">高尾山溫泉 & 市區拉麵</span>
+            <div class="desc">下山後直接前往「京王高尾山溫泉極樂湯」泡湯舒緩肌肉，晚上返回市區吃熱騰騰的拉麵。</div>
+            <div class="info-row">♨️ 費用：溫泉入場約 1,000 JPY</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=京王高尾山溫泉極樂湯" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+    </div>
+
+    <div id="d4" class="page-content">
+        <div class="card">
+            <span class="time-badge">早上</span>
+            <span class="spot-title">淺草經典巡禮</span>
+            <div class="desc">趁早前往淺草寺避開人潮，走訪雷門與仲見世通吃點心。</div>
+            <div class="info-row">🏨 住宿狀態：待定 🔍</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=淺草寺" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">下午</span>
+            <span class="spot-title">清澄白河：咖啡與下町</span>
+            <div class="desc">參觀清澄庭園，並在周邊知名的職人咖啡館坐坐，享受悠閒的下町時光。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=清澄庭園" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">晚上</span>
+            <span class="spot-title">晴空塔 & 文字燒</span>
+            <div class="desc">前往晴空塔商圈，至十間橋欣賞倒影，晚餐安排體驗道地的文字燒。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=東京晴空塔" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+    </div>
+
+    <div id="d5" class="page-content">
+        <div class="card">
+            <span class="time-badge">早上</span>
+            <span class="spot-title">築地場外市場</span>
+            <div class="desc">早起前往築地市場，享用新鮮海產、生魚片與玉子燒當早餐。</div>
+            <div class="info-row">🏨 住宿狀態：待定 🔍</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=築地場外市場" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">下午</span>
+            <span class="spot-title">東京鐵塔 & 秋葉原</span>
+            <div class="desc">先至芝公園周邊欣賞並拍攝東京鐵塔，接著前往秋葉原電器街感受動漫與科技文化。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=東京鐵塔" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">晚上</span>
+            <span class="spot-title">上野阿美橫町</span>
+            <div class="desc">熱鬧的阿美橫町逛街，適合吃街邊美食與提前物色伴手禮。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=上野阿美橫町" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+    </div>
+
+    <div id="d6" class="page-content">
+        <div class="card">
+            <span class="time-badge">上午</span>
+            <span class="spot-title">上野最後採買</span>
+            <div class="desc">前往上野或唐吉訶德進行最後的藥妝與伴手禮大採購，並整理行李。</div>
+            <a href="https://www.google.com/maps/search/?api=1&query=唐吉訶德+上野" target="_blank" class="nav-link">📍 開啟地圖導航</a>
+        </div>
+        <div class="card">
+            <span class="time-badge">下午</span>
+            <span class="spot-title">前往機場，平安賦歸</span>
+            <div class="desc">帶著滿滿的回憶，搭乘大眾運輸前往機場準備搭機回台。</div>
+            <div class="info-row">🚆 交通：Skyliner 預估票價約 2,570 JPY</div>
+        </div>
+    </div>
 
 </div>
 
 <script>
-    /* JavaScript：這就是讓按鈕「動起來」的魔法 */
-    function switchPage(pageId) {
-        // 1. 隱藏所有行程區塊
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.remove('active');
-        });
-
-        // 2. 移除所有按鈕的「選中狀態 (active)」
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        // 3. 顯示被點擊的那個區塊
+    function switchTab(pageId) {
+        // 1. 切換內容區塊
+        document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
 
-        // 4. 讓被點擊的按鈕變色
+        // 2. 切換導覽列按鈕樣式
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         event.currentTarget.classList.add('active');
+
+        // 3. 切換地圖顯示 (連動邏輯)
+        document.querySelectorAll('.map-frame').forEach(map => map.classList.remove('active'));
+        let targetMap = document.getElementById('map-' + pageId);
+        if(targetMap) {
+            targetMap.classList.add('active');
+        }
+
+        // 4. 自動捲動回最上方
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 </script>
 
